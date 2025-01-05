@@ -3,6 +3,7 @@ package agent
 import (
 	"beszel/internal/entities/system"
 	"log/slog"
+	"runtime"
 	"time"
 
 	"os"
@@ -38,6 +39,9 @@ func (a *Agent) initializeDiskInfo() {
 	// Helper function to add a filesystem to fsStats if it doesn't exist
 	addFsStat := func(device, mountpoint string, root bool) {
 		key := filepath.Base(device)
+		if runtime.GOOS == "windows" {
+			key = device
+		}
 		var ioMatch bool
 		if _, exists := a.fsStats[key]; !exists {
 			if root {
